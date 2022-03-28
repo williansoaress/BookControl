@@ -1,4 +1,5 @@
 using BookControl.Business.Interfaces;
+using BookControl.Business.Notifications;
 using BookControl.Business.Services;
 using BookControl.Data.Context;
 using BookControl.Data.Repository;
@@ -36,6 +37,7 @@ namespace BookControl.Api
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IStudentService, StudentService>();  
+            services.AddScoped<INotificator, Notificator>();  
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

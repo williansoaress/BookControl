@@ -16,7 +16,10 @@ namespace BookControl.Api.Controllers
         private readonly IStudentRepository _studentRepository;
         private readonly IMapper _mapper;
 
-        public StudentsController(IStudentService studentService, IMapper mapper, IStudentRepository studentRepository)
+        public StudentsController(IStudentService studentService, 
+                                  IMapper mapper, 
+                                  IStudentRepository studentRepository,
+                                  INotificator notificator) : base(notificator)
         {
             _studentService = studentService;
             _mapper = mapper;

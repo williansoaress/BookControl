@@ -9,7 +9,7 @@ namespace BookControl.Business.Services
     {
         private readonly IStudentRepository _studentRepository;
 
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(IStudentRepository studentRepository, INotificator notificator) : base(notificator)
         {
             _studentRepository = studentRepository;
         }

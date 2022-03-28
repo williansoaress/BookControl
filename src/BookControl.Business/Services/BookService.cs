@@ -1,5 +1,6 @@
 ﻿using BookControl.Business.Interfaces;
 using BookControl.Business.Models;
+using BookControl.Business.Models.Validations;
 using System;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace BookControl.Business.Services
     {
         private readonly IBookRepository _bookRepository;
 
-        public BookService(IBookRepository bookRepository)
+        public BookService(IBookRepository bookRepository, INotificator notificator) : base(notificator)
         {
             _bookRepository = bookRepository;
         }
@@ -21,6 +22,9 @@ namespace BookControl.Business.Services
 
         public async Task Update(Book book)
         {
+            var isValid = Validate(new BookValidation(), book);
+            if (!isValid) return;
+
             await _bookRepository.Update(book);
         }
 
