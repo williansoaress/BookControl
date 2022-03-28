@@ -27,7 +27,7 @@ namespace BookControl.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StudentDTO>>> Get()
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetAll()
         {
             var studentsDTO = await GetStudentsBooks();
             return Ok(studentsDTO);
@@ -37,42 +37,47 @@ namespace BookControl.Api.Controllers
         [Route("{id:guid}")]
         public async Task<ActionResult<StudentDTO>> GetById(Guid id)
         {
-            var studentDTO = await GetStudent(id);
-            return Ok(studentDTO);
+            var studentDTO = await GetStudentBooks(id);
+            return CustomResponse(studentDTO);
         }
 
         [HttpPost]
         public async Task<ActionResult<StudentDTO>> Post(StudentDTO studentDto)
         {
             await _studentService.Add(_mapper.Map<Student>(studentDto));
-            return Ok(studentDto);
+            return CustomResponse(studentDto);
         }
 
         [HttpPut]
         [Route("{id:guid}")]
         public async Task<ActionResult<StudentDTO>> Put(Guid id, StudentDTO studentDto)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (id != studentDto.Id)
+            {
+                NotifyError("Different ids");
+                return CustomResponse(studentDto);
+            }
 
-            if (id != studentDto.Id) return BadRequest();
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
 
             await _studentService.Update(_mapper.Map<Student>(studentDto));
-            return Ok(studentDto);
+            return CustomResponse(studentDto);
         }
 
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<ActionResult<StudentDTO>> Delete(Guid id)
         {
-            var studentDTO = await GetStudent(id);
+            var studentDTO = await GetStudentBooks(id);
 
             if (studentDTO == null) return NotFound();
 
             await _studentService.Remove(id);
-            return Ok(studentDTO);
+            return CustomResponse(studentDTO);
         }
 
-        private async Task<StudentDTO> GetStudent(Guid id)
+        private async Task<StudentDTO> GetStudentBooks(Guid id)
         {
             var studentDTO = _mapper.Map<StudentDTO>(await _studentRepository.GetStudentBooks(id));
             return studentDTO;
